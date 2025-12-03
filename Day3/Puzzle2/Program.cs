@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace Puzzle1;
+namespace Puzzle2;
 
 class Program
 {
@@ -12,34 +12,49 @@ class Program
         {
             using (StreamReader sr = new StreamReader("inputSource.txt"))
             {
-                List<int> maxJoltages = new();
+                int totalGenerators = 12;
+                List<string> maxJoltages = new();
                 string line;
 
                 while ((line = sr.ReadLine()) != null)
                 {
-                    string maxJoltage = "00";
+                    int arrayIndex = 0;
+                    int[] flippedLine = new int[line.Length];
 
-                    foreach (char c in line)
+                    foreach (char c in line.Reverse())
                     {
-                        var maxJ = Int32.Parse(maxJoltage);
-
-                        if (maxJ < Int32.Parse($"{maxJoltage[1]}{c}"))
-                        {
-                            maxJoltage = $"{maxJoltage[1]}{c}";
-                        }
-                        else if (maxJ < Int32.Parse($"{maxJoltage[0]}{c}"))
-                        {
-                            maxJoltage = $"{maxJoltage[0]}{c}";
-                        }
+                        flippedLine[arrayIndex] = (int)char.GetNumericValue(c);
+                        arrayIndex++;
                     }
 
-                    maxJoltages.Add(Int32.Parse(maxJoltage));
+                    string maxJoltage = string.Empty;
+                    int lastGreatestIndex = flippedLine.Length;
+
+                    for (int charPos = totalGenerators - 1; charPos >= 0; charPos--)
+                    {
+                        (int index, int value) greatestNum = (0, 0);
+
+                        for (int i = charPos; i < lastGreatestIndex; i++)
+                        {
+                            if (flippedLine[i] >= greatestNum.value)
+                            {
+                                greatestNum.value = flippedLine[i];
+                                greatestNum.index = i;
+                            }
+                        }
+
+                        lastGreatestIndex = greatestNum.index;
+                        maxJoltage += greatestNum.value;
+                    }
+
+                    maxJoltages.Add(maxJoltage);
                 }
 
-                int totalJoltage = 0;
-                foreach (int i in maxJoltages)
+                long totalJoltage = 0;
+                foreach (string i in maxJoltages)
                 {
-                    totalJoltage += i;
+                    var iLong = long.Parse(i);
+                    totalJoltage += iLong;
                 }
 
                 Console.WriteLine(totalJoltage);
