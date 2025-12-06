@@ -115,19 +115,21 @@ namespace Day4Puzzle1
             (int x, int y) zoneStartPos = (XPos - westRadius, YPos - northRadius);
             (int x, int y) zoneEndPos = (XPos + eastRadius, YPos + southRadius);
 
-            bool[,] targetArea = new bool[eastRadius + westRadius + 1, northRadius + southRadius + 1];
+            // Create a copy of the area as a new minefield..
+            int minesFound = 0;
             
             for (int row = zoneStartPos.y; row <= zoneEndPos.y; row++)
             {
                 for (int col = zoneStartPos.x; col <= zoneEndPos.x; col++)
                 {
-                    targetArea[col - zoneStartPos.x, row - zoneStartPos.y] = Minefield.Mines[col, row];
+                    if (Minefield.Mines[col, row])
+                    {
+                        minesFound++;
+                    }
                 }
             }
 
-            MineSweeper subSweeper = new(new Minefield (targetArea));
-
-            return subSweeper.SweepMinefield();
+            return minesFound;
         }
     }
 }
