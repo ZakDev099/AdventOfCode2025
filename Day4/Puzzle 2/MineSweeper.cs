@@ -76,6 +76,14 @@ namespace Day4Puzzle1
             
         }
 
+        public void RemoveMine()
+        {
+            if (IsMineFound)
+            {
+                Minefield.Mines[XPos, YPos] = false;
+            }
+        }
+
         public int SweepMinefield()
         {
             int minesFound = 0;
