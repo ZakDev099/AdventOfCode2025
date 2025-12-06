@@ -109,11 +109,11 @@ namespace Day4Puzzle1
 
             bool[,] targetArea = new bool[eastRadius + westRadius + 1, northRadius + southRadius + 1];
             
-            for (int y = zoneStartPos.y; y < zoneEndPos.y; y++)
+            for (int row = zoneStartPos.y; row <= zoneEndPos.y; row++)
             {
-                for (int x = zoneStartPos.x; x < zoneEndPos.x; x++)
+                for (int col = zoneStartPos.x; col <= zoneEndPos.x; col++)
                 {
-                    targetArea[x - zoneStartPos.x, y - zoneStartPos.y] = Minefield.Mines[x, y];
+                    targetArea[col - zoneStartPos.x, row - zoneStartPos.y] = Minefield.Mines[col, row];
                 }
             }
 

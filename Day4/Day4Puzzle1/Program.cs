@@ -7,8 +7,8 @@ class Program
     static void Main(string[] args)
     {
         int accessibleRolls = 0;
-        int accessibilityRequirement = 3;
-        bool[,]? mineField = null;
+        int accessibilityRequirement = 4;
+        bool[,]? mines = null;
 
         try
         {
@@ -37,7 +37,7 @@ class Program
                     rows.Add(columns);
                 }
 
-                mineField = new bool[rows.Count, rows[0].Count];
+                mines = new bool[rows[0].Count, rows.Count];
 
                 for (int row = 0; row < rows.Count; row++)
                 {
@@ -45,7 +45,7 @@ class Program
                     {
                         try
                         {
-                            mineField[row, col] = rows[row][col];
+                            mines[col, row] = rows[row][col];
                         }
                         catch (Exception)
                         {
@@ -60,22 +60,22 @@ class Program
             Console.WriteLine(ex.Message);
         }
 
-        if (mineField != null)
+        if (mines != null)
         {
-            Minefield mines = new(mineField);
-            MineSweeper mineSweeper = new(mines);
+            Minefield minefield = new(mines);
+            MineSweeper mineSweeper = new(minefield);
 
-            foreach (bool mine in mineSweeper.Minefield.Mines)
+            for (int i = 0; i < mineSweeper.Minefield.CellCount; i++)
             {
-                if (mine)
+                if (mineSweeper.IsMineFound)
                 {
                     if (mineSweeper.SweepImmediateArea(1) <= accessibilityRequirement)
                     {
                         accessibleRolls++;
                     }
-
-                    mineSweeper.StepDown();
                 }
+
+                mineSweeper.StepDown();
             }
         }
 
