@@ -9,36 +9,25 @@ public class ID_Validator
 {
     public List<long> Valid_IDs = [];
     public List<long> Invalid_IDs = [];
-    private List<(long floor, long ceiling)> id_Ranges = [];
+
 
     public ID_Validator(string[] data)
     {
         foreach (string ss in data)
         {
-            if (ValidateRange(ss, out var result)) 
-            {
-                id_Ranges.Add(result);
-            }
-        }
-
-        foreach (var id_Range in id_Ranges)
-        {
-            for (long i = id_Range.floor; i <= id_Range.ceiling; i++)
-            {
-                switch (Validate_ID(i))
-                {
-                    case true:
-                        Valid_IDs.Add(i);
-                        break;
-
-                    case false:
-                        Invalid_IDs.Add(i);
-                        break;
-                }
-            }
+            if (ValidateRange(ss, out var result)) Store_ID(result);
         }
     }
 
+
+    private void Store_ID((long floor, long ceiling) id_Range)
+    {
+        for (long i = id_Range.floor; i <= id_Range.ceiling; i++)
+            {
+                if (Validate_ID(i)) Valid_IDs.Add(i);
+                else Invalid_IDs.Add(i);
+            }
+    }
 
     // Removes whitespace and checks if the string is empty, verifies the string characters are valid,
     // then splits the string into an integer pair
@@ -64,8 +53,7 @@ public class ID_Validator
             result.ceiling = long.Parse(stringParts[1]);
             return true;
         }
-        else 
-            return false;
+        else return false;
         
     }
 
