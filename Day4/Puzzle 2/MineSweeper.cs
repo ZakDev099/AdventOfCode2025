@@ -84,6 +84,27 @@ namespace Day4Puzzle1
             }
         }
 
+        // Returns a list of coordinates (as a tuple) of all mines in the entire Minefield
+        public List<(int, int)> FindMines()
+        {
+            List<(int, int)> coords = [];
+
+            StepTo(0, 0);
+
+            for (int i = 0; i < Minefield.CellCount; i++)
+            {
+                if (IsMineFound)
+                {
+                    coords.Add((XPos, YPos));
+                }
+
+                StepDown();
+            }
+
+            return coords;
+        }
+
+        // Returns amount of mines in entire Minefield
         public int SweepMinefield()
         {
             int minesFound = 0;
@@ -99,6 +120,7 @@ namespace Day4Puzzle1
             return minesFound;
         }
 
+        // Returns amount of mines within the radius of the current position
         public int SweepImmediateArea(int searchRadius)
         {
             if (searchRadius < 1)

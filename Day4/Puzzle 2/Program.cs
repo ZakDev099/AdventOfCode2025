@@ -65,20 +65,41 @@ class Program
             Minefield minefield = new(mines);
             MineSweeper mineSweeper = new(minefield);
 
-            for (int i = 0; i < mineSweeper.Minefield.CellCount; i++)
+            List<(int x, int y)> mineCoords = mineSweeper.FindMines();
+            int removedMines;
+
+            do
             {
-                if (mineSweeper.IsMineFound)
+                List<(int x, int y)> minesRemainingCoords = [];
+                removedMines = 0;
+
+                foreach (var mine in mineCoords)
                 {
-                    if (mineSweeper.SweepImmediateArea(1) <= accessibilityRequirement)
+                    mineSweeper.StepTo(mine.x, mine.y);
+
+                    if (mineSweeper.IsMineFound)
                     {
-                        accessibleRolls++;
+                        if (mineSweeper.SweepImmediateArea(1) <= accessibilityRequirement)
+                        {
+                            accessibleRolls++;
+                            removedMines++;
+                            mineSweeper.RemoveMine();
+                        }
+                        else
+                        {
+                            minesRemainingCoords.Add(mine);
+                        }
                     }
+
+                    mineSweeper.StepDown();
                 }
 
-                mineSweeper.StepDown();
-            }
-        }
+                Console.WriteLine($"Mines Removed: {removedMines}");
+                mineCoords = minesRemainingCoords;
 
-        Console.WriteLine(accessibleRolls);
+            } while (removedMines > 0);
+
+            Console.WriteLine(accessibleRolls);
+        }
     }
 }
