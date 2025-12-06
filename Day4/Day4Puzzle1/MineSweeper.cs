@@ -107,7 +107,7 @@ namespace Day4Puzzle1
             (int x, int y) zoneStartPos = (XPos - westRadius, YPos - northRadius);
             (int x, int y) zoneEndPos = (XPos + eastRadius, YPos + southRadius);
 
-            bool[,] targetArea = new bool[zoneEndPos.y - zoneStartPos.y, zoneEndPos.x - zoneStartPos.x];
+            bool[,] targetArea = new bool[eastRadius + westRadius + 1, northRadius + southRadius + 1];
             
             for (int y = zoneStartPos.y; y < zoneEndPos.y; y++)
             {
