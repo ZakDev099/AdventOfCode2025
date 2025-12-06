@@ -136,8 +136,7 @@ namespace Day4Puzzle1
 
             (int x, int y) zoneStartPos = (XPos - westRadius, YPos - northRadius);
             (int x, int y) zoneEndPos = (XPos + eastRadius, YPos + southRadius);
-
-            // Create a copy of the area as a new minefield..
+            
             int minesFound = 0;
             
             for (int row = zoneStartPos.y; row <= zoneEndPos.y; row++)
