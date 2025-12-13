@@ -1,4 +1,6 @@
-﻿namespace Day5Puzzle2;
+﻿using System.Linq;
+
+namespace Day5Puzzle2;
 
 
 
@@ -6,9 +8,7 @@ class Program
 {
     static void Main(string[] args)
     {
-
-        List<long> id_List = [];
-        List<(long min, long max)?> id_Ranges = [];
+        List<(long min, long max)?> ID_Ranges = [];
 
         try
         {
@@ -16,19 +16,12 @@ class Program
             {
                 string? line;
 
-                while ((line = sr.ReadLine()) != null)
+
+                while (!string.IsNullOrWhiteSpace(line = sr.ReadLine()) && line != null)
                 {
                     if (Utils.TrySplitStringToRange(line, '-', out var id_Range))
                     {
-                        id_Ranges.Add(id_Range);
-                    }
-                    else if (long.TryParse(line, out long id))
-                    {
-                        id_List.Add(id);
-                    }
-                    else if (string.IsNullOrWhiteSpace(line))
-                    {
-                        continue;
+                        ID_Ranges.Add(id_Range);
                     }
                     else
                     {
@@ -42,32 +35,53 @@ class Program
             Console.WriteLine(ex);
         }
 
-
-
-        if (id_List == null)
-        {
-            Console.WriteLine("Error: failed to load IDs");
-            return;
-        }
-        else if (id_Ranges == null)
+        if (ID_Ranges == null || ID_Ranges.Count < 1)
         {
             Console.WriteLine("Error: failed to load ID Ranges");
             return;
         }
 
-        int validIdCount = 0;
-        foreach (long id in id_List)
+        // Checking if any ranges interfere and correcting them
+        List<(long min, long max)?> sorted_ID_Ranges = ID_Ranges.OrderBy(x => x!.Value.min).ToList();
+        List<(long min, long max)> new_ID_Ranges = [];
+        int lastIndex = -1;
+
+        foreach ((long min, long max) range in sorted_ID_Ranges!)
         {
-            foreach ((long min, long max) rng in id_Ranges)
+            if (lastIndex < 0)
             {
-                if (rng.min <= id && id <= rng.max)
-                {
-                    validIdCount++;
-                    break;
-                }
+                new_ID_Ranges.Add(range);
             }
+            else
+            {
+                var lastRange = new_ID_Ranges[lastIndex];
+                
+                if (lastRange.min <= range.min && range.min <= lastRange.max)
+                {
+                    if (range.max > lastRange.max)
+                    {
+                        new_ID_Ranges[lastIndex] = (lastRange.min, range.max);
+                        continue;
+                    }
+                    else continue;
+                }
+                else 
+                    new_ID_Ranges.Add(range);
+            }
+
+            lastIndex++;
         }
 
-        Console.WriteLine(validIdCount);
+
+        // Now counting all possible valid IDs
+        long valid_ID_Count = 0;
+
+        foreach (var range in new_ID_Ranges)
+        {
+            valid_ID_Count += range.max - range.min + 1;
+        }
+
+
+        Console.WriteLine(valid_ID_Count);
     }
 }
