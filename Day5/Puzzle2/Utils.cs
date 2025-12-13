@@ -16,13 +16,13 @@ namespace Day5Puzzle2
             {
                 var splitLine = input.Split('-');
 
-                if (!long.TryParse(splitLine[0], out long val1) || !long.TryParse(splitLine[1], out long val2)) 
-                    return false;
-                else
+                if (long.TryParse(splitLine[0], out long val1) && long.TryParse(splitLine[1], out long val2))
+                {
                     id_Range = (val1 > val2) ? id_Range = (val2, val1) : id_Range = (val1, val2);
-                    return true;
+                }
             }
-            else return false;
+
+            return id_Range != null;
         }
     }
 }
